@@ -1,0 +1,11 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+UID:demo-1@digitaltimeline
+SUMMARY:Java project demo rehearsal
+DTSTART:20261030T100000Z
+DTEND:20261030T110000Z
+LOCATION:Computer Lab 2
+DESCRIPTION:Rehearse timeline, AI assistant and knowledge graph demo.
+END:VEVENT
+END:VCALENDAR

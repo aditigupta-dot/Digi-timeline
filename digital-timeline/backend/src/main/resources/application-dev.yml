@@ -1,0 +1,15 @@
+# Zero-install profile: H2 + in-memory graph + offline AI. Run:  mvn spring-boot:run -Dspring-boot.run.profiles=dev
+spring:
+  datasource:
+    url: jdbc:h2:mem:dt;MODE=PostgreSQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: ""
+  h2.console.enabled: true
+management:
+  health.neo4j.enabled: false
+dt:
+  graph:
+    store: memory
+  ai:
+    llm-provider: ${DT_LLM_PROVIDER:offline}
+    embedding-provider: hashing
