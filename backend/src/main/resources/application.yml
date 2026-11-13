@@ -16,17 +16,17 @@ app:
     access-minutes: 15
     refresh-days: 7
   token-encryption-key: ${TOKEN_ENC_KEY}
-  cors-origin: http://localhost:5173
+  cors-origin: ${CORS_ORIGIN:http://localhost:5173}
   github:
     client-id: ${GITHUB_CLIENT_ID:}
     client-secret: ${GITHUB_CLIENT_SECRET:}
-    scopes: ${GITHUB_SCOPES:read:user}
-    redirect-uri: http://localhost:8080/api/integrations/github/callback
-    frontend-url: http://localhost:5173
+    scopes: ${GITHUB_SCOPES:read:user public_repo}
+    redirect-uri: ${GITHUB_REDIRECT_URI:http://localhost:8080/api/integrations/github/callback}
+    frontend-url: ${FRONTEND_URL:http://localhost:5173}
   google:
     client-id: ${GOOGLE_CLIENT_ID:}
     client-secret: ${GOOGLE_CLIENT_SECRET:}
-    redirect-uri-template: http://localhost:8080/api/integrations/{provider}/callback
+    redirect-uri-template: ${GOOGLE_REDIRECT_URI_TEMPLATE:http://localhost:8080/api/integrations/{provider}/callback}
   sync-enabled: true
   sync-intervals-ms: { github: 120000, gmail: 300000, calendar: 600000, classroom: 600000 }
   ai:
