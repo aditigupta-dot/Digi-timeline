@@ -1,0 +1,34 @@
+spring:
+  task:
+    scheduling:
+      shutdown:
+        await-termination: true
+        await-termination-period: 20s
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/digitaltimeline}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD}
+  flyway:
+    enabled: true
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    access-minutes: 15
+    refresh-days: 7
+  token-encryption-key: ${TOKEN_ENC_KEY}
+  cors-origin: http://localhost:5173
+  github:
+    client-id: ${GITHUB_CLIENT_ID:}
+    client-secret: ${GITHUB_CLIENT_SECRET:}
+    scopes: ${GITHUB_SCOPES:read:user}
+    redirect-uri: http://localhost:8080/api/integrations/github/callback
+    frontend-url: http://localhost:5173
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+    client-secret: ${GOOGLE_CLIENT_SECRET:}
+    redirect-uri-template: http://localhost:8080/api/integrations/{provider}/callback
+  sync-enabled: true
+  sync-intervals-ms: { github: 120000, gmail: 300000, calendar: 600000, classroom: 600000 }
+  ai:
+    gemini-api-key: ${GEMINI_API_KEY:}
+    gemini-model: ${GEMINI_MODEL:gemini-2.0-flash}
