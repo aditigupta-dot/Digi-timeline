@@ -11,7 +11,7 @@ export default function Dashboard() {
   return (<><p className="eyebrow">TODAY</p><h1 className="display sm">Overview</h1>
     <div className="stats"><div><b className="num">{data.openTasks}</b><span>open tasks</span></div>
       <div><b className="num">{data.activitiesThisWeek}</b><span>activities in the last 7 days</span></div></div>
-    {nothing && <Empty title="Nothing here yet">Add a task or a manual timeline entry to begin. Provider connections arrive in a later batch and will appear here once authorised. <Link to="/app/tasks">Add a task</Link></Empty>}
+    {nothing && <Empty title="Nothing here yet">Connect a source from Integrations, or add a task or manual timeline entry to get started. <Link to="/app/tasks">Add a task</Link></Empty>}
     <section><h2>Top priorities</h2>{pri.data?.length ? <ul className="rows">{pri.data.map((x) => <li key={x.task.id}><span>{x.task.title}<br /><span className="mono">{x.reasons.join(' · ')}</span></span><span className="mono">score {x.score}</span></li>)}</ul> : <p className="muted">No open confirmed tasks to rank.</p>}</section>
     <section><h2>Upcoming deadlines</h2>{data.upcoming.length ? <ul className="rows">{data.upcoming.map((t) => <li key={t.id}><span>{t.title}</span><span className="mono">{fmt(t.dueAt)}</span></li>)}</ul> : <p className="muted">No open tasks due in the next 7 days.</p>}</section>
     <section><h2>Recent activity</h2>{data.recent.length ? <ul className="rows">{data.recent.map((a) => <li key={a.id}><span>{a.title}</span><span className="mono">{a.source} · {fmt(a.occurredAt)}</span></li>)}</ul> : <p className="muted">No activity yet.</p>}</section>

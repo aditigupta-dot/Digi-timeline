@@ -16,7 +16,7 @@ export default function Integrations() {
   if (loading && !data) return <Skeleton lines={4} />;
   if (error) return <p className="form-error" role="alert">{error}</p>;
   return (<><p className="eyebrow">SOURCES</p><h1 className="display sm">Integrations</h1>
-    <p className="muted">A provider shows as connected only after real authorization succeeds. Syncs are manual for now; scheduled polling comes later.</p>
+    <p className="muted">Connect your accounts once. Digi-Timeline then syncs connected sources automatically in the background; you can also start a sync at any time.</p>
     <ul className="rows">{data.map((i) => (<li key={i.provider}><span><b>{NAMES[i.provider]}</b><br />
       <span className="mono">{i.status}{i.account ? ' · ' + i.account : ''}{i.lastSyncAt ? ' · last sync ' + fmt(i.lastSyncAt) : ''}{i.syncing ? ' · syncing…' : ''}</span>
       {i.lastError && <><br /><span className="form-error" role="alert">{i.lastError}</span></>}</span>

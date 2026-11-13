@@ -55,16 +55,25 @@ Java 21, Maven 3.9+, Node 20+, PostgreSQL 14+. No Docker.
 
 ## Environment variables
 Required: `DB_URL, DB_USER, DB_PASSWORD, JWT_SECRET, TOKEN_ENC_KEY`.
-Optional: `GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, GITHUB_SCOPES, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GEMINI_API_KEY, GEMINI_MODEL`.
+Optional: `CORS_ORIGIN, FRONTEND_URL, GITHUB_REDIRECT_URI, GOOGLE_REDIRECT_URI_TEMPLATE, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, GITHUB_SCOPES, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GEMINI_API_KEY, GEMINI_MODEL`.
 The app runs without any provider or AI key; the Connect buttons then explain what is missing.
 
+## GitHub Codespaces
+The URL settings are environment-driven so the same code works locally and in Codespaces. In your Codespace, set these values in the root .env file (do not commit .env):
+
+- CORS_ORIGIN and FRONTEND_URL: the forwarded frontend URL (the port your Vite app uses, commonly 5173 or 5176).
+- GITHUB_REDIRECT_URI: the forwarded backend URL (port 8080) plus /api/integrations/github/callback.
+- GOOGLE_REDIRECT_URI_TEMPLATE: the same forwarded backend URL plus /api/integrations/{provider}/callback.
+
+In GitHub Developer Settings, set the OAuth App callback URL to the exact GITHUB_REDIRECT_URI. In Google Cloud, add three authorized redirect URIs by replacing {provider} with gmail, calendar and classroom. Make the backend port reachable by the browser's OAuth redirect. If the Codespace is recreated or its forwarded hostname changes, update these environment values and the provider console URLs together. Never paste OAuth secrets into chat or commit them.
+
 ## GitHub OAuth setup
-GitHub > Settings > Developer settings > OAuth Apps > New. Homepage `http://localhost:5173`, callback `http://localhost:8080/api/integrations/github/callback`. Put the Client ID and a new secret in `.env`. Default scope is `read:user` (public activity). For private repos set `GITHUB_SCOPES="read:user repo"`; GitHub OAuth Apps have no read-only private-repo scope, so `repo` also grants write. Disconnect deletes our stored token; revoke the app in GitHub settings to fully remove access.
+GitHub > Settings > Developer settings > OAuth Apps > New. Homepage `http://localhost:5173`, callback `http://localhost:8080/api/integrations/github/callback`. Put the Client ID and a new secret in `.env`. Default scope is `read:user public_repo` (public repositories). For private repositories set `GITHUB_SCOPES="read:user repo"`; GitHub OAuth Apps have no read-only private-repository scope, so `repo` also grants write access. Disconnect deletes our stored token; revoke the app in GitHub settings to fully remove access.
 
 ## Google OAuth setup (Gmail, Calendar, Classroom)
 1. console.cloud.google.com: create a project and enable Gmail API, Google Calendar API and optionally Google Classroom API.
 2. OAuth consent screen: External, publishing status Testing, and add your own account as a Test user.
-3. Credentials > OAuth client ID > Web application. Add redirect URIs `http://localhost:8080/api/integrations/gmail/callback`, `.../calendar/callback` and `.../classroom/callback`.
+3. Credentials > OAuth client ID > Web application. Add redirect URIs matching `GOOGLE_REDIRECT_URI_TEMPLATE` for `gmail`, `calendar` and `classroom`.
 4. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, restart, then Connect each service separately.
 5. In Testing mode Google expires refresh tokens after 7 days. The Integrations page then shows an error and a Reconnect button. Google also shows an "unverified app" warning; that is normal here.
 6. Scopes: `gmail.readonly`, `calendar.events.readonly`, `classroom.courses.readonly` and `classroom.coursework.me.readonly`. Classroom only works for accounts enrolled in courses; otherwise the UI says no courses are visible.
@@ -79,7 +88,7 @@ Polling defaults: GitHub 2 min, Gmail 5, Calendar 10, Classroom 10 (`app.sync-in
 - `Could not resolve placeholder 'DB_PASSWORD'` or `'JWT_SECRET'`: variables are not loaded in this terminal (Setup step 3).
 - `TOKEN_ENC_KEY must be base64 of exactly 32 bytes`: regenerate with `openssl rand -base64 32`.
 - Flyway or connection errors: check the database exists and `DB_URL`, `DB_USER`, `DB_PASSWORD`.
-- `redirect_uri_mismatch`: the URI in the provider console must match exactly, including `http` and port 8080.
+- `redirect_uri_mismatch`: the URI in the provider console must match the corresponding `GITHUB_REDIRECT_URI` or Google callback URL exactly, including scheme, hostname and port.
 - Blank page or errors on `/api`: the backend is not running on port 8080.
 - Live updates silent: check the backend log for authentication errors on `/api/events`.
 
